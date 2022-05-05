@@ -10,7 +10,7 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
   require_once "config.php";
   $jobtitle = $jobdescription = $address = $city = $states = $zipcode = $qualifications = $responsibilities = $education = $jobtype = $experiencelevel = $salaryrange =$benefits =$contactdetails=$deadline = "";
   $jobtitle_err = $jobdescription_err = $address_err = $city_err = $states_err = $zipcode_err = $qualifications_err = $responsibilites_err = $education_err = $jobtype_err = $experiencelevel_err = $salaryrange_err =$contactdetails_err =$deadline_err= "";
-  if ($_SERVER["REQUEST_METHOD"] == "POST"){
+  if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['randcheck']==$_SESSION['rand']){
     include 'validateJobPost.php';
     if(empty($jobtitle_err)&&empty($jobdescription_err)&&empty($jobtitle_err)&&empty($city_err)&&empty($states_err)&&empty($zipcode_err)&&empty($qualifications_err)&&empty($responsibilities_err)&&empty($education_err)&&empty($jobtype_err)&&empty($experiencelevel_err)&&empty($salaryrange_err)&&empty($contactdetails_err)&&empty($deadline_err)){
       include 'insertJobPost.php';
@@ -55,6 +55,11 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
          <h2>Sign Up</h2>
          <p>Please fill this form to create a Jobpost.</p>
          <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post" >
+           <?php
+           $rand=rand();
+           $_SESSION['rand']=$rand;
+           ?>
+            <input type="hidden" value="<?php echo $rand; ?>" name="randcheck" />
             <div class="row">
                <div class="col-7">
                   <div class="form-group">
