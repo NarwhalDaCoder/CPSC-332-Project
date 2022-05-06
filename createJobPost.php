@@ -11,9 +11,9 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
   $jobtitle = $jobdescription = $address = $city = $states = $zipcode = $qualifications = $responsibilities = $education = $jobtype = $experiencelevel = $salaryrange =$benefits =$contactdetails=$deadline = "";
   $jobtitle_err = $jobdescription_err = $address_err = $city_err = $states_err = $zipcode_err = $qualifications_err = $responsibilites_err = $education_err = $jobtype_err = $experiencelevel_err = $salaryrange_err =$contactdetails_err =$deadline_err= "";
   if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['randcheck']==$_SESSION['rand']){
-    include 'validateJobPost.php';
+    include 'validation/validateJobPost.php';
     if(empty($jobtitle_err)&&empty($jobdescription_err)&&empty($jobtitle_err)&&empty($city_err)&&empty($states_err)&&empty($zipcode_err)&&empty($qualifications_err)&&empty($responsibilities_err)&&empty($education_err)&&empty($jobtype_err)&&empty($experiencelevel_err)&&empty($salaryrange_err)&&empty($contactdetails_err)&&empty($deadline_err)){
-      include 'insertJobPost.php';
+      include 'inserts/insertJobPost.php';
       echo "I did work";
     }
     else{

@@ -10,7 +10,7 @@ $username_err = $password_err = $confirm_password_err = $firstname_err = $lastna
 if ($_SERVER["REQUEST_METHOD"] == "POST")
 {
 
-    include 'validateUser.php';
+    include 'validation/validateUser.php';
     if ($employee)
     {
         //validate Employee
@@ -27,26 +27,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     if ($employer)
     {
         if(isset($_POST['includeaddress'])) {
-          include 'validateAddress.php';
+          include 'validation/validateAddress.php';
         }
 
-        include 'validateEmployer.php';
+        include 'validation/validateEmployer.php';
     }
 
     // Check input errors before inserting in database
     if (empty($username_err) && empty($password_err) && empty($confirm_password_err) && empty($lastname_err) && empty($firstname_err) && empty($phonenumber_err) && ($employee || ($employer&& (!isset($_POST['includeaddress']) || (isset($_POST['includeaddress']) && empty ($address_err) ) )   )    ) )
     {
-        include 'insertUser.php';
+        include 'inserts/insertUser.php';
         if ($employee && empty($education_err))
         {
-            include 'insertEmployee.php';
+            include 'inserts/insertEmployee.php';
         }
         if ($employer && empty($role_err) && empty($employername_err) && empty($employeremail_err) && empty($employerphonenumber_err))
         {
-            include 'insertEmployer.php';
+            include 'inserts/insertEmployer.php';
             if (isset($_POST['includeaddress']))
             {
-                include 'insertAddress.php';
+                include 'inserts/insertAddress.php';
                 $sql = "INSERT INTO EmployerToAddress (EmployerID, AddressID) VALUES (?,?)";
                 if ($stmt = mysqli_prepare($mysqli, $sql))
                 {
