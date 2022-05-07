@@ -6,7 +6,16 @@ session_start();
 // Check if the user is already logged in, if yes then redirect him to welcome page
 if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
 {
-    header("location: createJobPost.php");
+    //if employee go to searchResults
+    if (isset($_SESSION["employee"]) && $_SESSION["employee"] === true)
+    {
+        header("location: searchResults.php");
+    }
+    //employer only goes to createjobposts
+    else
+    {
+        header("location: createJobPost.php");
+    }
     exit;
 }
 
@@ -70,7 +79,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                     {
                         if ($password == $server_password)
                         {
-
                             //set session variables
                             $_SESSION["loggedin"] = true;
                             $_SESSION["id"] = $id;

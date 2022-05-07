@@ -8,6 +8,12 @@ if (!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true)
     header("location: login.php");
     exit;
 }
+//if not employer go to searchResults.php
+if (!isset($_SESSION["employer"]) && !$_SESSION["employer"] === true)
+{
+    header("location: searchResults.php");
+    exit;
+}
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['randcheck'] == $_SESSION['rand'])
 {
@@ -117,11 +123,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['randcheck'] == $_SESSION['ra
                               <div class="row g-3">
                                  <div class="col-md-12">
                                     <label for="inputAddress" class="form-label">Address</label>
-                                    <input type="text" class="form-control" id="inputAddress" placeholder="1234 Main St">
+                                    <input type="text" name = "address" class="form-control" id="inputAddress" placeholder="1234 Main St">
                                  </div>
                                  <div class="col-md-4">
                                     <label for="inputCity" class="form-label">City</label>
-                                    <input type="text" class="form-control" id="inputCity">
+                                    <input type="text" name = "city" class="form-control" id="inputCity">
                                  </div>
                                  <div class="col-md-5">
                                     <label for="states"class="form-label">State</label>
@@ -138,7 +144,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['randcheck'] == $_SESSION['ra
                                  </div>
                                  <div class="col-md-3">
                                     <label for="inputZip" class="form-label">Zip</label>
-                                    <input type="text" class="form-control" id="inputZip">
+                                    <input type="text" name="zipcode" class="form-control" id="inputZip">
                                  </div>
                               </div>
                               <div class="form-group">
