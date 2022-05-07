@@ -14,7 +14,7 @@ if (isset($_SESSION["loggedin"]) && $_SESSION["loggedin"] === true)
     //employer only goes to createjobposts
     else
     {
-        header("location: createJobPost.php");
+        header("location: viewEmployerPosts.php");
     }
     exit;
 }

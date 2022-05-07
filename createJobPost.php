@@ -73,16 +73,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && $_POST['randcheck'] == $_SESSION['ra
                            <li class="nav-item">
                               <a class="nav-link active" aria-current="page" href="#">Home</a>
                            </li>
-                           <li class="nav-item dropdown">
+                           <li class="nav-item dropdown <?php echo (!isset($_SESSION["employer"])) ? 'd-none' : ''; ?>">
                               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                               Employer Tools
                               </a>
                               <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                 <li><a class="dropdown-item" href="CreateJobPost.php">Create Jobpost</a></li>
-                                 <li><a class="dropdown-item" href="#">View Jobposts</a></li>
+                                 <li><a class="dropdown-item" href="createJobPost.php">Create Jobpost</a></li>
+                                 <li><a class="dropdown-item" href="viewEmployerPosts.php">View Jobposts</a></li>
                               </ul>
                            </li>
-                           <li class="nav-item dropdown">
+                           <li class="nav-item dropdown <?php echo (!isset($_SESSION["employee"])) ? 'd-none' : ''; ?>">
                               <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                               Employee Tools
                               </a>
