@@ -5,6 +5,94 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
   header("location: login.php");
   exit;
 }
+//redirect if not employee
+if (!isset($_SESSION["employee"]) && !$_SESSION["employee"] === true)
+{
+    header("location: createJobPost.php");
+    exit;
+}
+if (isset($_GET['pageno'])) {
+            $pageno = $_GET['pageno'];
+        }
+else {
+          $pageno = 1;
+        }
+        $no_of_records_per_page = 10;
+        $offset = ($pageno-1) * $no_of_records_per_page;
+require_once "config.php";
+$sql = "SELECT COUNT(*) FROM JobPosts Where Deadline >= CURDATE()";
+if($stmt = mysqli_prepare($mysqli, $sql)){
+    // Bind variables to the prepared statement as parameters
+    //mysqli_stmt_bind_param($stmt, "");
+
+    // Set parameters
+    //$param_address= $address; // Creates a password hash
+
+    // Attempt to execute the prepared statement
+    if(mysqli_stmt_execute($stmt)){
+        $total_rows=mysqli_stmt_num_rows($stmt);
+        $total_pages = ($total_rows/$no_of_records_per_page)+1;
+        //$addressid = $mysqli->insert_id;
+        // Redirect to login page
+        //header("location: login.php");
+    } else{
+        echo "Oops! Something went wrong. Please try again later.";
+    }
+
+    // Close statement
+    mysqli_stmt_close($stmt);
+
+}
+$sql = "SELECT Title,
+  (Select EmployerName From Employer Where Employer.EmployerID =
+  (Select EmployerID From employerposts Where employerposts.JobPostID = Jobposts.JobpostID limit 1)),
+  (Select Title From educationlevels WHERE educationlevels.EducationID = jobposts.EducationID),
+  (Select Title From salaryrange WHERE salaryrange.SalaryID = jobposts.SalaryID),
+  (Select Title From jobtypes WHERE jobtypes.JobTypeID = jobposts.JobTypeID),
+  (Select Title From experiencerequired WHERE experiencerequired.ExpReqID = jobposts.ExpReqID),
+  StateName,CityName
+  From Jobposts
+  				join addresstojobpost on jobposts.JobPostID = addresstojobpost.JobPostID
+   				join zipcodetoaddress on zipcodetoaddress.AddressID = addresstojobpost.AddressID
+   				join zipcodes on zipcodetoaddress.ZipCode = zipcodes.ZipCode
+                join city on city.CityID = zipcodes.CityID
+   				join citytostate on city.CityID = citytostate.CityID
+   				join state on citytostate.StateID = state.StateID
+
+  Where Deadline >= CURDATE()
+  LIMIT  ? ,  ?";
+if($stmt = mysqli_prepare($mysqli, $sql)){
+    // Bind variables to the prepared statement as parameters
+    //mysqli_stmt_bind_param($stmt, "");
+
+    // Set parameters
+    //$param_address= $address; // Creates a password hash
+
+    // Attempt to execute the prepared statement
+    mysqli_stmt_bind_param($stmt, "ss", $param_offset,$param_limit);
+    $param_limit = $no_of_records_per_page;
+    $param_offset = $offset;
+    /* bind result variables */
+    mysqli_stmt_bind_result($stmt, $title,$name, $education,$salaryrange,$jobtype,$experiencelevel,$states,$city);
+    // Attempt to execute the prepared statement
+    if(mysqli_stmt_execute($stmt)){
+        //$addressid = $mysqli->insert_id;
+        // Redirect to login page
+        //header("location: login.php");
+        $arr  = [];
+        while (mysqli_stmt_fetch($stmt)) {
+          $arr[] = array($title,$name, $education,$salaryrange,$jobtype,$experiencelevel,$states,$city);
+      }
+      //get results
+      //print_r ($arr);
+    } else{
+        echo "Oops! Something went wrong. Please try again later.";
+    }
+
+    // Close statement
+    mysqli_stmt_close($stmt);
+
+}
  ?>
  <!DOCTYPE html>
 <html>
@@ -61,20 +149,21 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
             </div>
          </nav>
          <br>
+         <?php  foreach($arr as $key => $value)
+            { ?>
          <div class="card mb-3">
             <div class="card-body">
                <div class="d-flex flex-column flex-lg-row">
                   <div class="row flex-fill">
                      <div class="col-sm-5">
-                        <h4 class="h5">Title</h4>
-                        <h5 class="h6">Company</h5>
-                        <span class="badge bg-secondary">City, State</span> <span class="badge bg-success">$xxxxx+</span>
+                        <h4 class="h5"><?php echo $value[0]; ?></h4>
+                        <h5 class="h6"><?php echo $value[1]; ?></h5>
+                        <span class="badge bg-secondary"><?php echo $value[7].", ".$value[6]; ?></span> <span class="badge bg-success"><?php echo $value[3]; ?></span>
                      </div>
-                     <div class="col-sm-4 py-3">
-                        <span class="badge bg-secondary">REACT</span>
-                        <span class="badge bg-secondary">NODE</span>
-                        <span class="badge bg-secondary">TYPESCRIPT</span>
-                        <span class="badge bg-secondary">JUNIOR</span>
+                     <div class="col-sm-4 py-4">
+                        <span class="badge bg-secondary "><?php echo $value[2]; ?></span>
+                        <span class="badge bg-secondary"><?php echo $value[4]; ?></span>
+                        <span class="badge bg-secondary"><?php echo $value[5]; ?></span>
                      </div>
                      <div class="col-sm-3 text-lg-end">
                         <a href="#" class="btn btn-primary stretched-link">Apply</a>
@@ -83,17 +172,18 @@ if(!isset($_SESSION["loggedin"]) || $_SESSION["loggedin"] !== true){
                </div>
             </div>
          </div>
+         <?php
+            } ?>
          <nav aria-label="Page navigation example">
             <ul class="pagination justify-content-center">
-               <li class="page-item disabled">
-                  <a class="page-link">Previous</a>
-               </li>
-               <li class="page-item"><a class="page-link" href="#">1</a></li>
-               <li class="page-item"><a class="page-link" href="#">2</a></li>
-               <li class="page-item"><a class="page-link" href="#">3</a></li>
-               <li class="page-item">
-                  <a class="page-link" href="#">Next</a>
-               </li>
+              <li class = page-link><a href="?pageno=1">First</a></li>
+              <li class="page-item <?php if($pageno <= 1){ echo 'disabled'; } ?>">
+                <a class = page-link href="<?php if($pageno <= 1){ echo '#'; } else { echo "?pageno=".($pageno - 1); } ?>">Prev</a>
+              </li>
+              <li class="page-item <?php if($pageno >= $total_pages){ echo 'disabled'; } ?>">
+                <a class = page-link href="page-link <?php if($pageno >= $total_pages){ echo '#'; } else { echo "?pageno=".($pageno + 1); } ?>">Next</a>
+              </li>
+              <li class = page-link><a href="?pageno=<?php echo $total_pages; ?>">Last</a></li>
             </ul>
          </nav>
       </div>
