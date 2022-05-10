@@ -87,7 +87,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
 <head>
     <meta charset="UTF-8">
     <title>Sign Up</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
+
+    <script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p" crossorigin="anonymous"></script>
+
     <style>
         body{ font: 14px sans-serif; }
         .wrapper{ width: 360px; padding: 20px; }
@@ -97,6 +101,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
     <div class="wrapper">
         <h2>Sign Up</h2>
         <p>Please fill this form to create an account.</p>
+        <div class="d-grid gap-3">
+
         <form action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" method="post">
           <div class="form-group">
               <label>First Name</label>
@@ -148,15 +154,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
               }
 
             </script>
+
             <div class="form-group">
                 <label>Employee and/or Employer</label>
-
-                    <br>Employee<input type="checkbox" name="employee" id="employee" onchange="valueChanged()" class ="form-control <?php echo (!empty($employ_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $employee; ?>" />
-                    Employer<input type="checkbox" name="employer" id="employer" onchange="empChanged()" class ="form-control <?php echo (!empty($employ_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $employer; ?>"/>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="employee"  onchange="valueChanged()" value="" id="employee">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Employee
                   </label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="employer"  onchange="empChanged()" value="" id="employer">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    Employer
+                  </label>
+                </div>
                   <span class="invalid-feedback"><?php echo $employ_err ?></span>
             </div>
-
             <div class="form-group">
                 <div id="displayemployee" style="display:none;">
                 <label>Employee Education Level</label>
@@ -211,9 +225,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                 }
 
               </script>
+
               <div class="form-group">
-                  <label>Include Address?</label><input type="checkbox" name="includeaddress" id="includeaddress" onchange="addressChanged()" class ="form-control"/>
+                <div class="form-check">
+                  <input class="form-check-input" type="checkbox" name="includeaddress"  onchange="addressChanged()" id="includeaddress">
+                  <label class="form-check-label" for="flexCheckDefault">
+                    include Address?
+                  </label>
+                </div>
                     <span class="invalid-feedback"><?php echo $employ_err ?></span>
+              </div>
               </div>
               <div id="displayaddress" style="display:none;">
               <div class="form-group">
@@ -231,22 +252,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST")
                   <input type="text" name="city" class="form-control <?php echo (!empty($city_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $city; ?>">
                   <span class="invalid-feedback"><?php echo $city_err; ?></span>
               </div>
-              <select name = "states" class ="form-control <?php echo (!empty($states_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $states; ?>">
-                 <option value="0">--- Choose a state ---</option>
-                 <?php include 'states.php';foreach ($states as $key => $value) { ?>
-	                  <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
-	                 <?php } ?>
-
-                 </select>
-                 <span class="invalid-feedback"><?php echo $states_err; ?></span>
+              <label for="states"class="form-label">State</label>
+              <select name = "states" id="states" class ="form-select <?php echo (!empty($states_err)) ? 'is-invalid' : ''; ?>" value="<?php echo $states; ?>">
+                 <option value="0">Choose</option>
+                 <?php include 'states.php';
+                    foreach ($state as $key => $value)
+                    { ?>
+                 <option value="<?php echo $key; ?>"><?php echo $value; ?></option>
+                 <?php
+                    } ?>
+              </select>
+              <span class="invalid-feedback"><?php echo $states_err; ?></span>
                </div>
-            </div>
             <br>
+            </div>
             <div class="form-group">
                 <input type="submit" class="btn btn-primary" value="Submit">
             </div>
             <p>Already have an account? <a href="login.php">Login here</a>.</p>
         </form>
+    </div>
     </div>
 </body>
 </html>
