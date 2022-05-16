@@ -26,19 +26,11 @@ require_once "config.php";
 $sql = "SELECT COUNT(*) FROM JobPosts Where Deadline >= CURDATE()";
 if ($stmt = mysqli_prepare($mysqli, $sql))
 {
-    // Bind variables to the prepared statement as parameters
-    //mysqli_stmt_bind_param($stmt, "");
-    // Set parameters
-    //$param_address= $address; // Creates a password hash
     // Attempt to execute the prepared statement
     if (mysqli_stmt_execute($stmt))
     {
         $total_rows = mysqli_stmt_num_rows($stmt);
         $total_pages = ($total_rows / $no_of_records_per_page) + 1;
-        //$addressid = $mysqli->insert_id;
-        // Redirect to login page
-        //header("location: login.php");
-
     }
     else
     {

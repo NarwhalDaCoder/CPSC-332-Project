@@ -2,7 +2,7 @@
     $host = 'localhost';
     $user = 'root';
     $password = '';
-    $database = 'mydb';
+    $database = 'myjob';
     $link = new mysqli();
     $mysqli = new mysqli($host, $user, $password, $database);
     if (mysqli_connect_errno()) {
